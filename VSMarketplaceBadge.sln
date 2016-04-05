@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSMarketplaceBadge", "VSMarketplaceBadge\VSMarketplaceBadge.csproj", "{CA559861-B1BB-42D5-9614-E752E3437AED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CA559861-B1BB-42D5-9614-E752E3437AED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA559861-B1BB-42D5-9614-E752E3437AED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA559861-B1BB-42D5-9614-E752E3437AED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA559861-B1BB-42D5-9614-E752E3437AED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
