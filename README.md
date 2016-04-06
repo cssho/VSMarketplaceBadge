@@ -8,12 +8,12 @@ WEB Site: [VSMarketplaceBadge](http://vsmarketplacebadge.apphb.com/)
 # Version Badge
 ![](image/cssho.vscode-svgviewer_version.svg)
 
-SVG URL : http://vsmarketplacebadge.apphb.com/version/{publisher_name}.{extension_name}.svg
+SVG URL : `http://vsmarketplacebadge.apphb.com/version/{publisher_name}.{extension_name}.svg`
 
 # Installs Badge
 ![](image/cssho.vscode-svgviewer_installs.svg)
 
-SVG URL : http://vsmarketplacebadge.apphb.com/installs/{publisher_name}.{extension_name}.svg
+SVG URL : `http://vsmarketplacebadge.apphb.com/installs/{publisher_name}.{extension_name}.svg`
 
 # Thanks
 - Badge created by [Shields.io](http://shields.io/)
