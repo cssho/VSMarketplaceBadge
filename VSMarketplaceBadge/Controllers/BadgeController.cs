@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 using VSMarketplaceBadge.Models;
 
@@ -36,6 +33,10 @@ namespace VSMarketplaceBadge.Controllers
             var res = Request.CreateResponse(HttpStatusCode.OK);
             res.Content = new StringContent(await ShieldsIo.LoadSvg($"https://img.shields.io/badge/{subejct}-{status}-brightgreen.svg"),
                 Encoding.UTF8, "image/svg+xml");
+            res.Headers.CacheControl = new CacheControlHeaderValue()
+            {
+                NoCache = true
+            };
             return res;
         }
     }
