@@ -10,18 +10,19 @@
     <div class="container">
         <div class="header clearfix">
             <h1>VSMarketplaceBadge</h1>
+            <h2>Version and installs badge for Visual Studio Marketplace.</h2>
         </div>
-        <div class="jumbotron">
+        <div class="jumbotron" style="display:table;">
             <div class="col-lg-12" style="margin-bottom:10px;">
                 <p>Item Name(e.g. ms-vscode.csharp):</p>
                 <input type="text" id="item" />
                 <button onclick="getBadge()">Find</button>
             </div>
-            <div class="col-lg-12">                
+            <div class="col-lg-12">
                 <span>Version : </span><img id="badge_version" />
                 <textarea style="width:100%;" id="bv_url" readonly></textarea>
             </div>
-            <div class="col-lg-12">                
+            <div class="col-lg-12">
                 <span>Installs : </span><img id="badge_installs" />
                 <textarea style="width:100%;" id="bi_url" readonly></textarea>
             </div>
