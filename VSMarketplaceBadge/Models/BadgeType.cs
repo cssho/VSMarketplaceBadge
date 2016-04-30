@@ -2,6 +2,6 @@
 {
     public enum BadgeType
     {
-        Version, Installs
+        Version, Installs, Rating
     }
 }

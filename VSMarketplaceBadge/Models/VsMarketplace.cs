@@ -14,7 +14,7 @@ namespace VSMarketplaceBadge.Models
         private static readonly Uri marketplaceUri = new Uri("https://marketplace.visualstudio.com/items");
         private static readonly string Query = "itemName";
 
-        public static async Task<string> Load(string itemName,BadgeType type)
+        public static async Task<string> Load(string itemName, BadgeType type)
         {
             switch (type)
             {
@@ -22,15 +22,25 @@ namespace VSMarketplaceBadge.Models
                     return await LoadVersion(itemName);
                 case BadgeType.Installs:
                     return await LoadInstalls(itemName);
+                case BadgeType.Rating:
+                    return await LoadRating(itemName);
                 default:
                     throw new ArgumentException();
             }
         }
 
+        private static async Task<string> LoadRating(string itemName)
+        {
+            var json = await LoadVssItemData(itemName);
+            var average = json["statistics"].FirstOrDefault(x => (string)x["statisticName"] == "averagerating").Value<double>("value");
+            var count = json["statistics"].FirstOrDefault(x => (string)x["statisticName"] == "ratingcount").Value<int>("value");
+            return $"average: {Math.Round(average, 2)} ({count} ratings)";
+        }
+
         private static async Task<string> LoadVersion(string itemName)
         {
             var json = await LoadVssItemData(itemName);
-            return (string)json["versions"].Max(x => x["version"]);
+            return $"v{(string)json["versions"].Max(x => x["version"])}";
         }
 
         private static async Task<string> LoadInstalls(string itemName)

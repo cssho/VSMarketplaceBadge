@@ -12,6 +12,8 @@ namespace VSMarketplaceBadge.Controllers
     {
         private static readonly string InstallsSubject = "installs";
         private static readonly string VersionSubject = "Visual%20Studio%20Marketplace";
+        private static readonly string RatingSubject = "rating";
+
         [HttpGet]
         [Route("version/{id}.svg")]
         public async Task<HttpResponseMessage> Version(string id)
@@ -26,10 +28,17 @@ namespace VSMarketplaceBadge.Controllers
             return await CreateResponse(id, BadgeType.Installs);
         }
 
+        [HttpGet]
+        [Route("rating/{id}.svg")]
+        public async Task<HttpResponseMessage> Rating(string id)
+        {
+            return await CreateResponse(id, BadgeType.Rating);
+        }
+
         private async Task<HttpResponseMessage> CreateResponse(string itemName, BadgeType type)
         {
             var status = await VsMarketplace.Load(itemName, type);
-            var subejct = type == BadgeType.Version ? VersionSubject : InstallsSubject;
+            var subejct = type == BadgeType.Version ? VersionSubject : type == BadgeType.Installs ? InstallsSubject : RatingSubject;
             var res = Request.CreateResponse(HttpStatusCode.OK);
             res.Content = new StringContent(await ShieldsIo.LoadSvg($"https://img.shields.io/badge/{subejct}-{status}-brightgreen.svg"),
                 Encoding.UTF8, "image/svg+xml");
