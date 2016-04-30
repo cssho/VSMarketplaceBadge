@@ -15,6 +15,11 @@ SVG URL : `http://vsmarketplacebadge.apphb.com/version/{publisher_name}.{extensi
 
 SVG URL : `http://vsmarketplacebadge.apphb.com/installs/{publisher_name}.{extension_name}.svg`
 
+# Rating Badge
+![](image/ms-vscode_csharp.png)
+
+SVG URL : `http://vsmarketplacebadge.apphb.com/rating/{publisher_name}.{extension_name}.svg`
+
 # Thanks
 - Badge created by [Shields.io](http://shields.io/)
 - VSMarketplaceBadge running on [AppHarbor](https://appharbor.com/)
