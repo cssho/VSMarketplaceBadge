@@ -34,7 +34,7 @@ namespace VSMarketplaceBadge.Models
             var json = await LoadVssItemData(itemName);
             var average = json["statistics"].FirstOrDefault(x => (string)x["statisticName"] == "averagerating").Value<double>("value");
             var count = json["statistics"].FirstOrDefault(x => (string)x["statisticName"] == "ratingcount").Value<int>("value");
-            return $"average: {Math.Round(average, 2)} ({count} ratings)";
+            return $"average: {Math.Round(average, 2)}/5 ({count} ratings)";
         }
 
         private static async Task<string> LoadVersion(string itemName)
