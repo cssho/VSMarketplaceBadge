@@ -12,6 +12,7 @@ namespace VSMarketplaceBadge.Controllers
     {
         private static readonly string InstallsSubject = "installs";
         private static readonly string VersionSubject = "Visual%20Studio%20Marketplace";
+        private static readonly string VersionShortSubject = "VS%20Marketplace";
         private static readonly string RatingSubject = "rating";
 
         [HttpGet]
@@ -19,6 +20,13 @@ namespace VSMarketplaceBadge.Controllers
         public async Task<HttpResponseMessage> Version(string id)
         {
             return await CreateResponse(id, BadgeType.Version);
+        }
+
+        [HttpGet]
+        [Route("version-short/{id}.svg")]
+        public async Task<HttpResponseMessage> VersionShort(string id)
+        {
+            return await CreateResponse(id, BadgeType.VersionShort);
         }
 
         [HttpGet]
@@ -35,10 +43,19 @@ namespace VSMarketplaceBadge.Controllers
             return await CreateResponse(id, BadgeType.Rating);
         }
 
+        [HttpGet]
+        [Route("rating-short/{id}.svg")]
+        public async Task<HttpResponseMessage> RatingShort(string id)
+        {
+            return await CreateResponse(id, BadgeType.RatingShort);
+        }
+
+
         private async Task<HttpResponseMessage> CreateResponse(string itemName, BadgeType type)
         {
             var status = await VsMarketplace.Load(itemName, type);
-            var subejct = type == BadgeType.Version ? VersionSubject : type == BadgeType.Installs ? InstallsSubject : RatingSubject;
+
+            var subejct = SelectSubject(type);
             var res = Request.CreateResponse(HttpStatusCode.OK);
             res.Content = new StringContent(await ShieldsIo.LoadSvg($"https://img.shields.io/badge/{subejct}-{status}-brightgreen.svg"),
                 Encoding.UTF8, "image/svg+xml");
@@ -47,6 +64,24 @@ namespace VSMarketplaceBadge.Controllers
                 NoCache = true
             };
             return res;
+        }
+
+        private string SelectSubject(BadgeType type)
+        {
+            switch (type)
+            {
+                case BadgeType.Version:
+                    return VersionSubject;
+                case BadgeType.Installs:
+                    return InstallsSubject;
+                case BadgeType.Rating:
+                case BadgeType.RatingShort:
+                    return RatingSubject;
+                case BadgeType.VersionShort:
+                    return VersionShortSubject;
+                default:
+                    return "";
+            }
         }
     }
 }

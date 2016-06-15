@@ -19,22 +19,27 @@ namespace VSMarketplaceBadge.Models
             switch (type)
             {
                 case BadgeType.Version:
+                case BadgeType.VersionShort:
                     return await LoadVersion(itemName);
                 case BadgeType.Installs:
                     return await LoadInstalls(itemName);
                 case BadgeType.Rating:
                     return await LoadRating(itemName);
+                case BadgeType.RatingShort:
+                    return await LoadRating(itemName, true);
                 default:
                     throw new ArgumentException();
             }
         }
 
-        private static async Task<string> LoadRating(string itemName)
+        private static async Task<string> LoadRating(string itemName, bool isShort = false)
         {
             var json = await LoadVssItemData(itemName);
             var average = json["statistics"].FirstOrDefault(x => (string)x["statisticName"] == "averagerating").Value<double>("value");
             var count = json["statistics"].FirstOrDefault(x => (string)x["statisticName"] == "ratingcount").Value<int>("value");
-            return $"average: {Math.Round(average, 2)}/5 ({count} ratings)";
+            return isShort
+                ? $"{Math.Round(average, 2)}/5 ({count})"
+                : $"average: {Math.Round(average, 2)}/5 ({count} ratings)";
         }
 
         private static async Task<string> LoadVersion(string itemName)
