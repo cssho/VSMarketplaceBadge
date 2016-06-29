@@ -2,6 +2,7 @@
 using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -11,8 +12,9 @@ namespace VSMarketplaceBadge.Models
 {
     public static class VsMarketplace
     {
-        private static readonly Uri marketplaceUri = new Uri("https://marketplace.visualstudio.com/items");
-        private static readonly string Query = "itemName";
+        private static readonly Uri marketplaceUri = new Uri("https://marketplace.visualstudio.com/");
+        private static readonly Uri marketplaceItemUri = new Uri(marketplaceUri, "items");
+        private static readonly string itemQuery = "itemName";
 
         public static async Task<string> Load(string itemName, BadgeType type)
         {
@@ -31,7 +33,7 @@ namespace VSMarketplaceBadge.Models
                     throw new ArgumentException();
             }
         }
-
+        
         private static async Task<string> LoadRating(string itemName, bool isShort = false)
         {
             var json = await LoadVssItemData(itemName);
@@ -59,17 +61,25 @@ namespace VSMarketplaceBadge.Models
             var html = new HtmlDocument();
             using (var client = new HttpClient())
             {
-                var builder = CreateUri(itemName);
+                var builder = CreateItemUri(itemName);
                 html.LoadHtml(await client.GetStringAsync(builder.ToString()));
             }
             return JObject.Parse(html.DocumentNode.QuerySelectorAll(".vss-extension").First().InnerText);
         }
 
-        private static UriBuilder CreateUri(string itemName)
+        private static UriBuilder CreateItemUri(string itemName)
         {
-            var builder = new UriBuilder(marketplaceUri);
+            return CreateUri(new Dictionary<string, string>() { { itemQuery, itemName } });
+        }
+
+        private static UriBuilder CreateUri(Dictionary<string, string> param)
+        {
+            var builder = new UriBuilder(marketplaceItemUri);
             var query = HttpUtility.ParseQueryString(builder.Query);
-            query[Query] = itemName;
+            foreach (var kv in param)
+            {
+                query[kv.Key] = kv.Value;
+            }
 
             builder.Query = query.ToString();
             return builder;

@@ -10,12 +10,14 @@
     <meta name="twitter:image" content="https://vsmarketplacebadge.apphb.com/image/vsmb.png" />
     <title>VSMarketplaceBadge</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
-        crossorigin="anonymous">
+          crossorigin="anonymous">
 </head>
 
 <body>
-    <a href="https://github.com/cssho/VSMarketplaceBadge"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67"
-            alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+    <a href="https://github.com/cssho/VSMarketplaceBadge">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67"
+             alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png">
+    </a>
     <div class="container">
         <div class="header clearfix">
             <h1>VSMarketplaceBadge</h1>
@@ -24,28 +26,33 @@
         <div class="jumbotron" style="display:table;">
             <div class="col-lg-12" style="margin-bottom:10px;">
                 <p>Item Name(e.g. ms-vscode.csharp):</p>
-                <input type="text" id="item" />
-                <button onclick="getBadge()">Find</button>
+                <div class="col-lg-5">
+                    <input type="text" id="item" list="items" class="form-control" />
+                    <datalist id="items"></datalist>
+                </div>
+                <div class="col-lg-2">
+                    <button onclick="getBadge()" class="btn btn-default">Find</button>
+                </div>
             </div>
             <div class="col-lg-12">
                 <span>Version : </span><img id="badge_version" />
-                <textarea style="width:100%;" id="bv_url" readonly></textarea>
+                <textarea id="bv_url" class="form-control" readonly></textarea>
             </div>
             <div class="col-lg-12">
                 <span>Version(Short) : </span><img id="badge_version_short" />
-                <textarea style="width:100%;" id="bvs_url" readonly></textarea>
+                <textarea id="bvs_url" class="form-control" readonly></textarea>
             </div>
             <div class="col-lg-12">
                 <span>Installs : </span><img id="badge_installs" />
-                <textarea style="width:100%;" id="bi_url" readonly></textarea>
+                <textarea id="bi_url" class="form-control" readonly></textarea>
             </div>
             <div class="col-lg-12">
                 <span>Rating : </span><img id="badge_rating" />
-                <textarea style="width:100%;" id="br_url" readonly></textarea>
+                <textarea id="br_url" class="form-control" readonly></textarea>
             </div>
             <div class="col-lg-12">
                 <span>Rating(Short) : </span><img id="badge_rating_short" />
-                <textarea style="width:100%;" id="brs_url" readonly></textarea>
+                <textarea id="brs_url" class="form-control" readonly></textarea>
             </div>
         </div>
         <div class="col-lg-12">
@@ -54,8 +61,54 @@
     </div>
     <script src="//code.jquery.com/jquery-2.2.2.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
-        crossorigin="anonymous"></script>
+            crossorigin="anonymous"></script>
     <script type="text/javascript">
+        $(function () {
+            $("#item").keyup(function (e) {
+                if (e.which === 190) {
+                    var item = $('#item').val();
+                    var data = {
+                        assetTypes: [
+                            'Microsoft.VisualStudio.Services.Icons.Default'
+                        ],
+                        filters: [
+                            {
+                                criteria: [
+                                    {
+                                        filterType: 8,
+                                        value: 'Microsoft.VisualStudio.Code'
+                                    },
+                                    {
+                                        filterType: 10,
+                                        value: `publisher:\"${escape(item.substr(0, item.length - 1))}\"`
+                                    }
+                                ],
+                                "pageSize": 100,
+                                "pageNumber": 1
+                            }
+                        ]
+                    }
+                    $.ajax({
+                        url: 'https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data),
+                        dataType: "json",
+                        headers: {
+                            'Accept': 'application/json;api-version=3.0-preview.1'
+                        }
+                    }).done(function (json) {
+                        if (json.results.length === 1 && json.results[0].extensions.length >= 1) {
+                            $('#items').empty();
+                            $.each(json.results[0].extensions, function () {
+                                $('#items').append($('<option>').val($('#item').val() + this.extensionName));
+                            });
+                        }
+
+                    });
+                }
+            });
+        });
         function getBadge() {
             var item = $('#item').val();
             var vurl = convertAbsUrl('/version/' + item + '.svg');
