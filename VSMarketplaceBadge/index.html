@@ -47,6 +47,10 @@
                 <textarea id="bi_url" class="form-control" readonly></textarea>
             </div>
             <div class="col-lg-12">
+                <span>Installs(Short) : </span><img id="badge_installs_short" />
+                <textarea id="bis_url" class="form-control" readonly></textarea>
+            </div>
+            <div class="col-lg-12">
                 <span>Rating : </span><img id="badge_rating" />
                 <textarea id="br_url" class="form-control" readonly></textarea>
             </div>
@@ -101,6 +105,7 @@
                         if (json.results.length === 1 && json.results[0].extensions.length >= 1) {
                             $('#items').empty();
                             $.each(json.results[0].extensions, function () {
+                                console.log(this);
                                 $('#items').append($('<option>').val($('#item').val() + this.extensionName));
                             });
                         }
@@ -115,6 +120,7 @@
             var iurl = convertAbsUrl('/installs/' + item + '.svg');
             var rurl = convertAbsUrl('/rating/' + item + '.svg');
             var vsurl = convertAbsUrl('/version-short/' + item + '.svg');
+            var isurl = convertAbsUrl('/installs-short/' + item + '.svg');
             var rsurl = convertAbsUrl('/rating-short/' + item + '.svg');
             $('#badge_version').attr("src", vurl);
             $('#bv_url').val(vurl);
@@ -126,6 +132,8 @@
             $('#bvs_url').val(vsurl);
             $('#badge_rating_short').attr("src", rsurl);
             $('#brs_url').val(rsurl);
+            $('#badge_installs_short').attr("src", isurl);
+            $('#bis_url').val(iurl);
         }
         function convertAbsUrl(src) {
             return $("<a>").attr("href", src).get(0).href;

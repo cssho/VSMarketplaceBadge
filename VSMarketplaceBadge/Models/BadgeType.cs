@@ -6,6 +6,7 @@
         Installs,
         Rating,
         VersionShort,
-        RatingShort
+        RatingShort,
+        InstallsShort
     }
 }

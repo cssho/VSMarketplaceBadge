@@ -37,6 +37,13 @@ namespace VSMarketplaceBadge.Controllers
         }
 
         [HttpGet]
+        [Route("installs-short/{id}.svg")]
+        public async Task<HttpResponseMessage> InstallsShort(string id)
+        {
+            return await CreateResponse(id, BadgeType.InstallsShort);
+        }
+
+        [HttpGet]
         [Route("rating/{id}.svg")]
         public async Task<HttpResponseMessage> Rating(string id)
         {
@@ -73,6 +80,7 @@ namespace VSMarketplaceBadge.Controllers
                 case BadgeType.Version:
                     return VersionSubject;
                 case BadgeType.Installs:
+                case BadgeType.InstallsShort:
                     return InstallsSubject;
                 case BadgeType.Rating:
                 case BadgeType.RatingShort:

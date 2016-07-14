@@ -15,6 +15,7 @@ namespace VSMarketplaceBadge.Models
         private static readonly Uri marketplaceUri = new Uri("https://marketplace.visualstudio.com/");
         private static readonly Uri marketplaceItemUri = new Uri(marketplaceUri, "items");
         private static readonly string itemQuery = "itemName";
+        private static readonly string[] units = { "", "K", "M", "G" };
 
         public static async Task<string> Load(string itemName, BadgeType type)
         {
@@ -25,6 +26,8 @@ namespace VSMarketplaceBadge.Models
                     return await LoadVersion(itemName);
                 case BadgeType.Installs:
                     return await LoadInstalls(itemName);
+                case BadgeType.InstallsShort:
+                    return await LoadInstalls(itemName, true);
                 case BadgeType.Rating:
                     return await LoadRating(itemName);
                 case BadgeType.RatingShort:
@@ -50,10 +53,24 @@ namespace VSMarketplaceBadge.Models
             return $"v{(string)json["versions"].Max(x => x["version"])}";
         }
 
-        private static async Task<string> LoadInstalls(string itemName)
+        private static async Task<string> LoadInstalls(string itemName, bool isShort = false)
         {
             var json = await LoadVssItemData(itemName);
-            return (string)json["statistics"].FirstOrDefault(x => (string)x["statisticName"] == "install")["value"];
+            if (isShort)
+            {
+                var installs = (double)json["statistics"].FirstOrDefault(x => (string)x["statisticName"] == "install")["value"];
+                return ApplyUnit(installs);
+            }
+            else
+            {
+                return (string)json["statistics"].FirstOrDefault(x => (string)x["statisticName"] == "install")["value"];
+            }
+        }
+
+        private static string ApplyUnit(double installs, int unitIdx = 0)
+        {
+            if (installs < 1000 || unitIdx == units.Length) return installs.ToString() + units[unitIdx];
+            return ApplyUnit(Math.Round(installs / 1000, 2, MidpointRounding.AwayFromZero), unitIdx + 1);
         }
 
         private static async Task<JObject> LoadVssItemData(string itemName)
