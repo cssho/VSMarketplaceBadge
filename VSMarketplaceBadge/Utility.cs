@@ -15,9 +15,9 @@ namespace VSMarketplaceBadge
         private static readonly string apiKey = ConfigurationManager.AppSettings.Get("LOGGLY_KEY");
         private static readonly HttpClient client = new HttpClient();
         public static RankingViewModel Ranking = new RankingViewModel();
-        public static async Task SendAccess(string itemName, BadgeType type)
+        public static async Task SendAccess(string itemName, BadgeType type, string subject)
         {
-            var content = new StringContent(JsonConvert.SerializeObject(new { Item = itemName, Type = type.ToString() }), Encoding.UTF8, "application/json");
+            var content = new StringContent(JsonConvert.SerializeObject(new { Item = itemName, Type = type.ToString(), Subject = subject }), Encoding.UTF8, "application/json");
             await client.PostAsync($"https://logs-01.loggly.com/inputs/{apiKey}/tag/access/", content);
         }
 

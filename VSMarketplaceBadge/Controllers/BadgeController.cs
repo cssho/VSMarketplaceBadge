@@ -10,51 +10,51 @@ namespace VSMarketplaceBadge.Controllers
 {
     public class BadgeController : ApiController
     {
-        private static readonly string InstallsSubject = "installs";
-        private static readonly string VersionSubject = "Visual%20Studio%20Marketplace";
-        private static readonly string VersionShortSubject = "VS%20Marketplace";
-        private static readonly string RatingSubject = "rating";
+        private const string InstallsSubject = "installs";
+        private const string VersionSubject = "Visual%20Studio%20Marketplace";
+        private const string VersionShortSubject = "VS%20Marketplace";
+        private const string RatingSubject = "rating";
 
         [HttpGet]
         [Route("version/{id}.svg")]
-        public async Task<HttpResponseMessage> Version(string id)
+        public async Task<HttpResponseMessage> Version(string id, string subject = VersionSubject)
         {
-            return await CreateResponse(id, BadgeType.Version);
+            return await CreateResponse(id, BadgeType.Version, subject);
         }
 
         [HttpGet]
         [Route("version-short/{id}.svg")]
-        public async Task<HttpResponseMessage> VersionShort(string id)
+        public async Task<HttpResponseMessage> VersionShort(string id, string subject = VersionShortSubject)
         {
-            return await CreateResponse(id, BadgeType.VersionShort);
+            return await CreateResponse(id, BadgeType.VersionShort, subject);
         }
 
         [HttpGet]
         [Route("installs/{id}.svg")]
-        public async Task<HttpResponseMessage> Installs(string id)
+        public async Task<HttpResponseMessage> Installs(string id, string subject = InstallsSubject)
         {
-            return await CreateResponse(id, BadgeType.Installs);
+            return await CreateResponse(id, BadgeType.Installs, subject);
         }
 
         [HttpGet]
         [Route("installs-short/{id}.svg")]
-        public async Task<HttpResponseMessage> InstallsShort(string id)
+        public async Task<HttpResponseMessage> InstallsShort(string id, string subject = InstallsSubject)
         {
-            return await CreateResponse(id, BadgeType.InstallsShort);
+            return await CreateResponse(id, BadgeType.InstallsShort, subject);
         }
 
         [HttpGet]
         [Route("rating/{id}.svg")]
-        public async Task<HttpResponseMessage> Rating(string id)
+        public async Task<HttpResponseMessage> Rating(string id, string subject = RatingSubject)
         {
-            return await CreateResponse(id, BadgeType.Rating);
+            return await CreateResponse(id, BadgeType.Rating, subject);
         }
 
         [HttpGet]
         [Route("rating-short/{id}.svg")]
-        public async Task<HttpResponseMessage> RatingShort(string id)
+        public async Task<HttpResponseMessage> RatingShort(string id, string subject = RatingSubject)
         {
-            return await CreateResponse(id, BadgeType.RatingShort);
+            return await CreateResponse(id, BadgeType.RatingShort, subject);
         }
 
         [HttpGet]
@@ -64,38 +64,18 @@ namespace VSMarketplaceBadge.Controllers
             return Utility.Ranking;
         }
 
-        private async Task<HttpResponseMessage> CreateResponse(string itemName, BadgeType type)
+        private async Task<HttpResponseMessage> CreateResponse(string itemName, BadgeType type, string subject)
         {
             var status = await VsMarketplace.Load(itemName, type);
-            Utility.SendAccess(itemName, type).FireAndForget();
-            var subejct = SelectSubject(type);
+            Utility.SendAccess(itemName, type, subject).FireAndForget();
             var res = Request.CreateResponse(HttpStatusCode.OK);
-            res.Content = new StringContent(await ShieldsIo.LoadSvg($"https://img.shields.io/badge/{subejct}-{status}-brightgreen.svg"),
+            res.Content = new StringContent(await ShieldsIo.LoadSvg($"https://img.shields.io/badge/{subject}-{status}-brightgreen.svg"),
                 Encoding.UTF8, "image/svg+xml");
             res.Headers.CacheControl = new CacheControlHeaderValue()
             {
                 NoCache = true
             };
             return res;
-        }
-
-        private string SelectSubject(BadgeType type)
-        {
-            switch (type)
-            {
-                case BadgeType.Version:
-                    return VersionSubject;
-                case BadgeType.Installs:
-                case BadgeType.InstallsShort:
-                    return InstallsSubject;
-                case BadgeType.Rating:
-                case BadgeType.RatingShort:
-                    return RatingSubject;
-                case BadgeType.VersionShort:
-                    return VersionShortSubject;
-                default:
-                    return "";
-            }
         }
     }
 }
