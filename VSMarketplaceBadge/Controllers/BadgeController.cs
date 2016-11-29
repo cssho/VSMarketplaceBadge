@@ -61,7 +61,7 @@ namespace VSMarketplaceBadge.Controllers
         private async Task<HttpResponseMessage> CreateResponse(string itemName, BadgeType type)
         {
             var status = await VsMarketplace.Load(itemName, type);
-
+            Utility.SendMetrics(type, itemName).FireAndForget();
             var subejct = SelectSubject(type);
             var res = Request.CreateResponse(HttpStatusCode.OK);
             res.Content = new StringContent(await ShieldsIo.LoadSvg($"https://img.shields.io/badge/{subejct}-{status}-brightgreen.svg"),
