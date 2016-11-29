@@ -12,16 +12,15 @@ namespace VSMarketplaceBadge.Models
     public static class Utility
     {
         private static readonly string apiKey = ConfigurationManager.AppSettings.Get("HOSTEDGRAPHITE_APIKEY");
-        public static async Task SendMetrics(BadgeType type, string target)
+        public static async Task SendMetrics(BadgeType type)
         {
             await Task.Run(() =>
             {
                 using (var client = new StatsDClient("statsd.hostedgraphite.com",
                 port: 8125, keyPrefix: apiKey))
                 {
-                    client.Increment("users");
-                    client.Increment($"type.{type.ToString()}");
-                    client.Increment($"target.{target}");
+                    client.Increment("access");
+                    client.Increment($"access.{type.ToString()}");
                 }
             });
         }
