@@ -40,8 +40,8 @@ namespace VSMarketplaceBadge.Models
         private static async Task<string> LoadRating(string itemName, bool isShort = false)
         {
             var json = await LoadVssItemData(itemName);
-            var average = json["statistics"].FirstOrDefault(x => (string)x["statisticName"] == "averagerating")?.Value<double>("value");
-            var count = json["statistics"].FirstOrDefault(x => (string)x["statisticName"] == "ratingcount")?.Value<int>("value");
+            var average = json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "averagerating")?.Value<double>("value");
+            var count = json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "ratingcount")?.Value<int>("value");
             return isShort
                 ? $"{Math.Round(average ?? 0, 2)}/5 ({count ?? 0})"
                 : $"average: {Math.Round(average ?? 0, 2)}/5 ({count ?? 0} ratings)";
@@ -58,12 +58,12 @@ namespace VSMarketplaceBadge.Models
             var json = await LoadVssItemData(itemName);
             if (isShort)
             {
-                var installs = (double)json["statistics"].FirstOrDefault(x => (string)x["statisticName"] == "install")["value"];
+                var installs = (double)(json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "install")["value"] ?? 0);
                 return ApplyUnit(installs);
             }
             else
             {
-                return (string)json["statistics"].FirstOrDefault(x => (string)x["statisticName"] == "install")["value"];
+                return (string)json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "install")["value"] ?? "0";
             }
         }
 
