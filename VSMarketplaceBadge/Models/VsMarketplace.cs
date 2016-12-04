@@ -16,6 +16,7 @@ namespace VSMarketplaceBadge.Models
         private static readonly Uri marketplaceItemUri = new Uri(marketplaceUri, "items");
         private static readonly string itemQuery = "itemName";
         private static readonly string[] units = { "", "K", "M", "G" };
+        private static readonly HttpClient client = new HttpClient();
 
         public static async Task<string> Load(string itemName, BadgeType type)
         {
@@ -76,11 +77,9 @@ namespace VSMarketplaceBadge.Models
         private static async Task<JObject> LoadVssItemData(string itemName)
         {
             var html = new HtmlDocument();
-            using (var client = new HttpClient())
-            {
-                var builder = CreateItemUri(itemName);
-                html.LoadHtml(await client.GetStringAsync(builder.ToString()));
-            }
+            var builder = CreateItemUri(itemName);
+            html.LoadHtml(await client.GetStringAsync(builder.ToString()));
+
             return JObject.Parse(html.DocumentNode.QuerySelectorAll(".vss-extension").First().InnerText);
         }
 
