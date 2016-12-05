@@ -1,13 +1,10 @@
 ﻿using Graphite.StatsD;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
+using VSMarketplaceBadge.Models;
 
-namespace VSMarketplaceBadge.Models
+namespace VSMarketplaceBadge
 {
     public static class Utility
     {
