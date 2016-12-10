@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using VSMarketplaceBadge.Models;
 
 namespace VSMarketplaceBadge
@@ -15,7 +16,7 @@ namespace VSMarketplaceBadge
         public static async Task SendMetrics(string itemName, BadgeType type)
         {
             var content = new StringContent(JsonConvert.SerializeObject(new { Item = itemName, Type = type.ToString() }), Encoding.UTF8, "application/json");
-            await client.PostAsync($"https://logs-01.loggly.com/inputs/762645d2-2ee6-4a2d-be18-4b7be6373cb8/tag/http/", content);
+            await client.PostAsync($"https://logs-01.loggly.com/inputs/{apiKey}/tag/http/", content);
         }
 
         public static void FireAndForget(this Task task)
@@ -28,8 +29,8 @@ namespace VSMarketplaceBadge
 
         public static async Task SendError(Exception e)
         {
-            var content = new StringContent(JsonConvert.SerializeObject(new { Exception = e.ToString() }), Encoding.UTF8, "application/json");
-            await client.PostAsync($"https://logs-01.loggly.com/inputs/762645d2-2ee6-4a2d-be18-4b7be6373cb8/tag/http/", content);
+            var content = new StringContent(JsonConvert.SerializeObject(new { Exception = e.ToString(), Request = HttpContext.Current.Request.Url.PathAndQuery }), Encoding.UTF8, "application/json");
+            await client.PostAsync($"https://logs-01.loggly.com/inputs/{apiKey}/tag/http/", content);
         }
     }
 }
