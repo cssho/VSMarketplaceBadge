@@ -107,12 +107,18 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GetRankingModule.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\BadgeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\BadgeType.cs" />
+    <Compile Include="Models\RankingData.cs" />
+    <Compile Include="Models\RankingItem.cs" />
+    <Compile Include="Models\RankingItemViewModel.cs" />
+    <Compile Include="Models\RankingType.cs" />
+    <Compile Include="Models\RankingViewModel.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Models\ShieldsIo.cs" />
     <Compile Include="Models\VsMarketplace.cs" />

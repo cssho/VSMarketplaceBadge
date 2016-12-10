@@ -11,6 +11,21 @@
     <title>VSMarketplaceBadge</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
           crossorigin="anonymous">
+    <style type="text/css">
+        .badge-row {
+            margin-top: 3px;
+            margin-bottom: 3px;
+        }
+
+        div.badge-row textarea {
+            height: 34px;
+            resize: none;
+        }
+
+        .jumbotron {
+            padding: 30px;
+        }
+    </style>
 </head>
 
 <body>
@@ -34,29 +49,44 @@
                     <button onclick="getBadge()" class="btn btn-default">Find</button>
                 </div>
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-12 badge-row">
                 <span>Version : </span><img id="badge_version" />
                 <textarea id="bv_url" class="form-control" readonly></textarea>
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-12 badge-row">
                 <span>Version(Short) : </span><img id="badge_version_short" />
                 <textarea id="bvs_url" class="form-control" readonly></textarea>
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-12 badge-row">
                 <span>Installs : </span><img id="badge_installs" />
                 <textarea id="bi_url" class="form-control" readonly></textarea>
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-12 badge-row">
                 <span>Installs(Short) : </span><img id="badge_installs_short" />
                 <textarea id="bis_url" class="form-control" readonly></textarea>
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-12 badge-row">
                 <span>Rating : </span><img id="badge_rating" />
                 <textarea id="br_url" class="form-control" readonly></textarea>
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-12 badge-row">
                 <span>Rating(Short) : </span><img id="badge_rating_short" />
                 <textarea id="brs_url" class="form-control" readonly></textarea>
+            </div>
+            <div class="col-lg-12 badge-row">
+                <h4>VSMarketplaceBadge Call Ranking</h4>
+                <div class="col-lg-4">
+                    <h5>Weekly</h5>
+                    <ol class="Weekly"></ol>
+                </div>
+                <div class="col-lg-4">
+                    <h5>Daily</h5>
+                    <ol class="Daily"></ol>
+                </div>
+                <div class="col-lg-4">
+                    <h5>Hourly</h5>
+                    <ol class="Hourly"></ol>
+                </div>
             </div>
         </div>
         <div class="col-lg-12">
@@ -105,13 +135,20 @@
                         if (json.results.length === 1 && json.results[0].extensions.length >= 1) {
                             $('#items').empty();
                             $.each(json.results[0].extensions, function () {
-                                console.log(this);
                                 $('#items').append($('<option>').val($('#item').val() + this.extensionName));
                             });
                         }
 
                     });
                 }
+            });
+            $.getJSON("ranking", function (data) {
+                $.each(data, function (key, val) {
+                    $.each(val, function (itemKey, itemVal) {
+                        $('.' + key).append('<li><a href="' + itemVal.Url + '">' + itemVal.ItemName + '</a></li>');
+                    });
+                });
+
             });
         });
         function getBadge() {

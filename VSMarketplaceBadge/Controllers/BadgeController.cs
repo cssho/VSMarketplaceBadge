@@ -57,11 +57,17 @@ namespace VSMarketplaceBadge.Controllers
             return await CreateResponse(id, BadgeType.RatingShort);
         }
 
+        [HttpGet]
+        [Route("ranking")]
+        public RankingViewModel Ranking()
+        {
+            return Utility.Ranking;
+        }
 
         private async Task<HttpResponseMessage> CreateResponse(string itemName, BadgeType type)
         {
             var status = await VsMarketplace.Load(itemName, type);
-            Utility.SendMetrics(itemName, type).FireAndForget();
+            Utility.SendAccess(itemName, type).FireAndForget();
             var subejct = SelectSubject(type);
             var res = Request.CreateResponse(HttpStatusCode.OK);
             res.Content = new StringContent(await ShieldsIo.LoadSvg($"https://img.shields.io/badge/{subejct}-{status}-brightgreen.svg"),

@@ -8,7 +8,7 @@ namespace VSMarketplaceBadge
     {
         public override void Log(ExceptionLoggerContext context)
         {
-            Utility.SendError(context.Exception).Wait();
+            Utility.SendError(context.Exception).FireAndForget();
         }
 
         public async override Task LogAsync(ExceptionLoggerContext context, CancellationToken cancellationToken)
