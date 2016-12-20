@@ -7,6 +7,6 @@ namespace VSMarketplaceBadge.Models
     public static class ShieldsIo
     {
         private static readonly HttpClient client = new HttpClient();
-        public static async Task<string> LoadSvg(string uri) => await client.GetStringAsync(uri);
+        public static async Task<string> LoadSvg(string uri,string query) => await client.GetStringAsync(uri + query);
     }
 }

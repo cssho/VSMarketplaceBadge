@@ -69,7 +69,7 @@ namespace VSMarketplaceBadge.Controllers
             var status = await VsMarketplace.Load(itemName, type);
             Utility.SendAccess(itemName, type, subject).FireAndForget();
             var res = Request.CreateResponse(HttpStatusCode.OK);
-            res.Content = new StringContent(await ShieldsIo.LoadSvg($"https://img.shields.io/badge/{subject}-{status}-brightgreen.svg"),
+            res.Content = new StringContent(await ShieldsIo.LoadSvg($"https://img.shields.io/badge/{subject}-{status}-brightgreen.svg", Request.RequestUri.Query),
                 Encoding.UTF8, "image/svg+xml");
             res.Headers.CacheControl = new CacheControlHeaderValue()
             {
