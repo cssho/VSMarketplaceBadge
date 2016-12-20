@@ -35,22 +35,22 @@ namespace VSMarketplaceBadge
                     {
                         var basicParam = Encoding.ASCII.GetBytes($"{LogglyId}:{LogglyPw}");
                         Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(basicParam));
-                        Utility.Ranking.Hourly = GetRankingData("h");
-                        Utility.Ranking.Daily = GetRankingData("d");
-                        Utility.Ranking.Weekly = GetRankingData("w");
-                        Utility.SendJob(nameof(GetRankingModule)).Wait();
+                        Loggly.Ranking.Hourly = GetRankingData("h");
+                        Loggly.Ranking.Daily = GetRankingData("d");
+                        Loggly.Ranking.Weekly = GetRankingData("w");
+                        Loggly.SendJob(nameof(GetRankingModule)).Wait();
                     }
                 }
                 catch (Exception ex)
                 {
-                    Utility.SendError(ex).FireAndForget();
+                    Loggly.SendError(ex).FireAndForget();
                 }
-            }, null, TimeSpan.Zero, TimeSpan.FromHours(1));
+            }, null, TimeSpan.Zero, TimeSpan.FromMinutes(10));
         }
 
         private List<RankingItemViewModel> GetRankingData(string fromQuery)
         {
-            var result = Client.GetStringAsync($"http://cssho.loggly.com/apiv2/fields/json.Item/?q=*&from=-1{fromQuery}&until=now&facet_size=5").Result;
+            var result = Client.GetStringAsync($"http://{LogglyId}.loggly.com/apiv2/fields/json.Item/?q=*&from=-1{fromQuery}&until=now&facet_size=5").Result;
             var data = JsonConvert.DeserializeObject<RankingData>(result.Replace("json.Item", "Item"));
             return data.Item.Select(x => new RankingItemViewModel() { ItemName = $"{x.Term} ({x.Count})", Url = VSMarketplaceBaseUrl + x.Term }).ToList();
         }

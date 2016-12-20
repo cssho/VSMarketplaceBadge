@@ -62,13 +62,13 @@ namespace VSMarketplaceBadge.Controllers
         [Route("ranking")]
         public RankingViewModel Ranking()
         {
-            return Utility.Ranking;
+            return Loggly.Ranking;
         }
 
         private async Task<HttpResponseMessage> CreateResponse(string itemName, BadgeType type, string subject, string color)
         {
             var status = await VsMarketplace.Load(itemName, type);
-            Utility.SendAccess(itemName, type, subject).FireAndForget();
+            Loggly.SendAccess(itemName, type, subject, color).FireAndForget();
             var res = Request.CreateResponse(HttpStatusCode.OK);
             res.Content = new StringContent(await ShieldsIo.LoadSvg($"https://img.shields.io/badge/{subject}-{status}-{color}.svg", Request.RequestUri.Query),
                 Encoding.UTF8, "image/svg+xml");
