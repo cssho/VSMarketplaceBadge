@@ -50,13 +50,16 @@ SVG is
 refer to [Shields.io](http://shields.io/)
 ## Color
 Add query string parameter *color*.
+
 `{SVG URL}?color={Color name or code}`
 
 If you should set the color 'red'.
+
 `https://vsmarketplacebadge.apphb.com/version/{publisher_name}.{extension_name}.svg?color=red`
 
 ## Style
 Add query string parameter *style*.
+
 `{SVG URL}?style={Styles}`
 
 - plastic
@@ -65,6 +68,7 @@ Add query string parameter *style*.
 - social
 
 If you should set the color 'plastic'.
+
 `https://vsmarketplacebadge.apphb.com/version/{publisher_name}.{extension_name}.svg?color=plastic`
 
 # Thanks
