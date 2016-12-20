@@ -14,47 +14,48 @@ namespace VSMarketplaceBadge.Controllers
         private const string VersionSubject = "Visual%20Studio%20Marketplace";
         private const string VersionShortSubject = "VS%20Marketplace";
         private const string RatingSubject = "rating";
+        private const string DefaultColor = "brightgreen";
 
         [HttpGet]
         [Route("version/{id}.svg")]
-        public async Task<HttpResponseMessage> Version(string id, string subject = VersionSubject)
+        public async Task<HttpResponseMessage> Version(string id, string subject = VersionSubject, string color = DefaultColor)
         {
-            return await CreateResponse(id, BadgeType.Version, subject);
+            return await CreateResponse(id, BadgeType.Version, subject, color);
         }
 
         [HttpGet]
         [Route("version-short/{id}.svg")]
-        public async Task<HttpResponseMessage> VersionShort(string id, string subject = VersionShortSubject)
+        public async Task<HttpResponseMessage> VersionShort(string id, string subject = VersionShortSubject, string color = DefaultColor)
         {
-            return await CreateResponse(id, BadgeType.VersionShort, subject);
+            return await CreateResponse(id, BadgeType.VersionShort, subject, color);
         }
 
         [HttpGet]
         [Route("installs/{id}.svg")]
-        public async Task<HttpResponseMessage> Installs(string id, string subject = InstallsSubject)
+        public async Task<HttpResponseMessage> Installs(string id, string subject = InstallsSubject, string color = DefaultColor)
         {
-            return await CreateResponse(id, BadgeType.Installs, subject);
+            return await CreateResponse(id, BadgeType.Installs, subject, color);
         }
 
         [HttpGet]
         [Route("installs-short/{id}.svg")]
-        public async Task<HttpResponseMessage> InstallsShort(string id, string subject = InstallsSubject)
+        public async Task<HttpResponseMessage> InstallsShort(string id, string subject = InstallsSubject, string color = DefaultColor)
         {
-            return await CreateResponse(id, BadgeType.InstallsShort, subject);
+            return await CreateResponse(id, BadgeType.InstallsShort, subject, color);
         }
 
         [HttpGet]
         [Route("rating/{id}.svg")]
-        public async Task<HttpResponseMessage> Rating(string id, string subject = RatingSubject)
+        public async Task<HttpResponseMessage> Rating(string id, string subject = RatingSubject, string color = DefaultColor)
         {
-            return await CreateResponse(id, BadgeType.Rating, subject);
+            return await CreateResponse(id, BadgeType.Rating, subject, color);
         }
 
         [HttpGet]
         [Route("rating-short/{id}.svg")]
-        public async Task<HttpResponseMessage> RatingShort(string id, string subject = RatingSubject)
+        public async Task<HttpResponseMessage> RatingShort(string id, string subject = RatingSubject, string color = DefaultColor)
         {
-            return await CreateResponse(id, BadgeType.RatingShort, subject);
+            return await CreateResponse(id, BadgeType.RatingShort, subject, color);
         }
 
         [HttpGet]
@@ -64,12 +65,12 @@ namespace VSMarketplaceBadge.Controllers
             return Utility.Ranking;
         }
 
-        private async Task<HttpResponseMessage> CreateResponse(string itemName, BadgeType type, string subject)
+        private async Task<HttpResponseMessage> CreateResponse(string itemName, BadgeType type, string subject, string color)
         {
             var status = await VsMarketplace.Load(itemName, type);
             Utility.SendAccess(itemName, type, subject).FireAndForget();
             var res = Request.CreateResponse(HttpStatusCode.OK);
-            res.Content = new StringContent(await ShieldsIo.LoadSvg($"https://img.shields.io/badge/{subject}-{status}-brightgreen.svg", Request.RequestUri.Query),
+            res.Content = new StringContent(await ShieldsIo.LoadSvg($"https://img.shields.io/badge/{subject}-{status}-{color}.svg", Request.RequestUri.Query),
                 Encoding.UTF8, "image/svg+xml");
             res.Headers.CacheControl = new CacheControlHeaderValue()
             {
