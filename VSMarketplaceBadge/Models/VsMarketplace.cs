@@ -60,13 +60,20 @@ namespace VSMarketplaceBadge.Models
             var json = await LoadVssItemData(itemName);
             if (isShort)
             {
-                var installs = (double)(json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "install")["value"] ?? 0);
+                var installs = (double)CountInstalls(json);
                 return ApplyUnit(installs);
             }
             else
             {
-                return (string)json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "install")["value"] ?? "0";
+                return CountInstalls(json).ToString();
             }
+        }
+
+        private static long CountInstalls(JObject json)
+        {
+            var installs = (long)(json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "install")["value"] ?? 0);
+            installs += (long)(json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "migratedInstallCount")?["value"] ?? 0);
+            return installs;
         }
 
         private static string ApplyUnit(double installs, int unitIdx = 0)
