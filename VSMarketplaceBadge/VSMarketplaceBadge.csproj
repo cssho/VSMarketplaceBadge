@@ -119,7 +119,7 @@
     <Compile Include="Models\RankingItemViewModel.cs" />
     <Compile Include="Models\RankingType.cs" />
     <Compile Include="Models\RankingViewModel.cs" />
-    <Compile Include="Utility.cs" />
+    <Compile Include="Loggly.cs" />
     <Compile Include="Models\ShieldsIo.cs" />
     <Compile Include="Models\VsMarketplace.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
