@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
-using VSMarketplaceBadge;
 
 namespace VSMarketplaceBadge.Models
 {
@@ -18,6 +18,11 @@ namespace VSMarketplaceBadge.Models
         private static readonly string itemQuery = "itemName";
         private static readonly string[] units = { "", "K", "M", "G" };
         private static readonly HttpClient client = new HttpClient();
+
+        static VsMarketplace()
+        {
+            client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("VSMarketplaceBadge", "1.0"));
+        }
 
         public static async Task<string> Load(string itemName, BadgeType type)
         {
