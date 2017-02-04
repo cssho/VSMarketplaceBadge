@@ -38,9 +38,9 @@ Add query string parameter *subject*.
 
 `{SVG URL}?subject={Custom Subject}`
 
-If you should set the subject 'SVM'.
+If you should set the subject 'VSM'.
 
-`https://vsmarketplacebadge.apphb.com/version/{publisher_name}.{extension_name}.svg?subject=SVM`
+`https://vsmarketplacebadge.apphb.com/version/{publisher_name}.{extension_name}.svg?subject=VSM`
 
 SVG is
 
