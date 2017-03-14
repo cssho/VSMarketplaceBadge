@@ -74,6 +74,18 @@
                 <textarea id="brs_url" class="form-control" readonly></textarea>
             </div>
             <div class="col-lg-12 badge-row">
+                <span>TrendingDaily : </span><img id="badge_trending_daily" />
+                <textarea id="btd_url" class="form-control" readonly></textarea>
+            </div>
+            <div class="col-lg-12 badge-row">
+                <span>TrendingWeekly : </span><img id="badge_trending_weekly" />
+                <textarea id="btw_url" class="form-control" readonly></textarea>
+            </div>
+            <div class="col-lg-12 badge-row">
+                <span>TrendingMonthly : </span><img id="badge_trending_monthly" />
+                <textarea id="btm_url" class="form-control" readonly></textarea>
+            </div>
+            <div class="col-lg-12 badge-row">
                 <h4>VSMarketplaceBadge Call Ranking</h4>
                 <div class="col-lg-4">
                     <h5>Weekly</h5>
@@ -159,6 +171,9 @@
             var vsurl = convertAbsUrl('/version-short/' + item + '.svg');
             var isurl = convertAbsUrl('/installs-short/' + item + '.svg');
             var rsurl = convertAbsUrl('/rating-short/' + item + '.svg');
+            var tdurl = convertAbsUrl('/trending-daily/' + item + '.svg');
+            var twurl = convertAbsUrl('/trending-weekly/' + item + '.svg');
+            var tmurl = convertAbsUrl('/trending-monthly/' + item + '.svg');
             $('#badge_version').attr("src", vurl);
             $('#bv_url').val(vurl);
             $('#badge_installs').attr("src", iurl);
@@ -171,6 +186,12 @@
             $('#brs_url').val(rsurl);
             $('#badge_installs_short').attr("src", isurl);
             $('#bis_url').val(isurl);
+            $('#badge_trending_daily').attr("src", tdurl);
+            $('#btd_url').val(tdurl);
+            $('#badge_trending_weekly').attr("src", twurl);
+            $('#btw_url').val(twurl);
+            $('#badge_trending_monthly').attr("src", tmurl);
+            $('#btm_url').val(tmurl);
         }
         function convertAbsUrl(src) {
             return $("<a>").attr("href", src).get(0).href;

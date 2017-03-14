@@ -7,6 +7,9 @@
         Rating,
         VersionShort,
         RatingShort,
-        InstallsShort
+        InstallsShort,
+        TrendingDaily,
+        TrendingWeekly,
+        TrendingMonthly
     }
 }

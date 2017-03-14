@@ -26,27 +26,33 @@ namespace VSMarketplaceBadge.Models
 
         public static async Task<string> Load(string itemName, BadgeType type)
         {
+            var json = await LoadVssItemData(itemName);
             switch (type)
             {
                 case BadgeType.Version:
                 case BadgeType.VersionShort:
-                    return await LoadVersion(itemName);
+                    return LoadVersion(json);
                 case BadgeType.Installs:
-                    return await LoadInstalls(itemName);
+                    return LoadInstalls(json);
                 case BadgeType.InstallsShort:
-                    return await LoadInstalls(itemName, true);
+                    return LoadInstalls(json, true);
                 case BadgeType.Rating:
-                    return await LoadRating(itemName);
+                    return LoadRating(json);
                 case BadgeType.RatingShort:
-                    return await LoadRating(itemName, true);
+                    return LoadRating(json, true);
+                case BadgeType.TrendingDaily:
+                    return LoadTrending(json, "trendingdaily");
+                case BadgeType.TrendingMonthly:
+                    return LoadTrending(json, "trendingmonthly");
+                case BadgeType.TrendingWeekly:
+                    return LoadTrending(json, "trendingweekly");
                 default:
                     throw new ArgumentException();
             }
         }
 
-        private static async Task<string> LoadRating(string itemName, bool isShort = false)
+        private static string LoadRating(JObject json, bool isShort = false)
         {
-            var json = await LoadVssItemData(itemName);
             var average = json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "averagerating")?.Value<double>("value");
             var count = json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "ratingcount")?.Value<int>("value");
             return isShort
@@ -54,15 +60,18 @@ namespace VSMarketplaceBadge.Models
                 : $"average: {Math.Round(average ?? 0, 2)}/5 ({count ?? 0} ratings)";
         }
 
-        private static async Task<string> LoadVersion(string itemName)
+        private static string LoadTrending(JObject json, string term)
         {
-            var json = await LoadVssItemData(itemName);
-            return $"v{(string)json["versions"].Max(x => x["version"])}";
+            var trend = json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == term)?.Value<double>("value");
+            return $"{Math.Round(trend ?? 0, 2)}";
         }
 
-        private static async Task<string> LoadInstalls(string itemName, bool isShort = false)
+        private static string LoadVersion(JObject json)
+            => $"v{(string)json["versions"].Max(x => x["version"])}";
+
+
+        private static string LoadInstalls(JObject json, bool isShort = false)
         {
-            var json = await LoadVssItemData(itemName);
             if (isShort)
             {
                 var installs = (double)CountInstalls(json);
