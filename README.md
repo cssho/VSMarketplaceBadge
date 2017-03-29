@@ -74,8 +74,3 @@ If you should set the color 'plastic'.
 # Thanks
 - Badge created by [Shields.io](http://shields.io/)
 - VSMarketplaceBadge running on [AppHarbor](https://appharbor.com/)
-
-## Support on Beerpay
-Hey dude! Help me out for a couple of :beers:!
-
-[![Beerpay](https://beerpay.io/cssho/VSMarketplaceBadge/badge.svg?style=beer-square)](https://beerpay.io/cssho/VSMarketplaceBadge)  [![Beerpay](https://beerpay.io/cssho/VSMarketplaceBadge/make-wish.svg?style=flat-square)](https://beerpay.io/cssho/VSMarketplaceBadge?focus=wish)
