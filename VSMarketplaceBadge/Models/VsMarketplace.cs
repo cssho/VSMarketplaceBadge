@@ -1,11 +1,13 @@
 ﻿using Fizzler.Systems.HtmlAgilityPack;
 using HtmlAgilityPack;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -14,6 +16,7 @@ namespace VSMarketplaceBadge.Models
     public static class VsMarketplace
     {
         private static readonly Uri marketplaceUri = new Uri("https://marketplace.visualstudio.com/");
+        private static readonly Uri marketplaceApiUri = new Uri("https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery");
         private static readonly Uri marketplaceItemUri = new Uri(marketplaceUri, "items");
         private static readonly string itemQuery = "itemName";
         private static readonly string[] units = { "", "K", "M", "G" };
@@ -22,11 +25,13 @@ namespace VSMarketplaceBadge.Models
         static VsMarketplace()
         {
             client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("VSMarketplaceBadge", "1.0"));
+            client.DefaultRequestHeaders.Add("Accept", "application/json;api-version=3.0-preview.1");
         }
 
         public static async Task<string> Load(string itemName, BadgeType type)
         {
-            var json = await LoadVssItemData(itemName);
+            //var json = await LoadVssItemData(itemName);
+            var json = await LoadVssItemDataFromApi(itemName);
             switch (type)
             {
                 case BadgeType.Version:
@@ -49,6 +54,31 @@ namespace VSMarketplaceBadge.Models
                 default:
                     throw new ArgumentException();
             }
+        }
+
+        private static async Task<JObject> LoadVssItemDataFromApi(string itemName)
+        {
+            var req = JsonConvert.SerializeObject(new { filters = new[] { new { criteria = new[] { new { filterType = 7, value = itemName }, new { filterType = 12, value = "4096" } } } }, flags = 914 });
+            var result = await client.PostAsync(marketplaceApiUri, new StringContent(req, Encoding.UTF8, "application/json"));
+            if (result.IsSuccessStatusCode)
+            {
+                var response = await result.Content.ReadAsStringAsync();
+                try
+                {
+                    return (JObject)JObject.Parse(response)["results"][0]["extensions"][0];
+                }
+                catch (InvalidOperationException ex)
+                {
+                    ex.Data.Add("json", response);
+                    throw ex;
+                }
+
+            }
+            var e = new InvalidCastException("Invalid extension data");
+            e.Data.Add("req", req.ToString());
+            e.Data.Add("res", await result.Content.ReadAsStringAsync());
+            throw e;
+
         }
 
         private static string LoadRating(JObject json, bool isShort = false)

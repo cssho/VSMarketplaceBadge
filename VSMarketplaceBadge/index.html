@@ -46,7 +46,7 @@
                     <datalist id="items"></datalist>
                 </div>
                 <div class="col-lg-2">
-                    <button onclick="getBadge()" class="btn btn-default">Find</button>
+                    <button class="btn btn-default" id="get_badge">Find</button>
                 </div>
             </div>
             <div class="col-lg-12 badge-row">
@@ -121,10 +121,6 @@
                             {
                                 criteria: [
                                     {
-                                        filterType: 8,
-                                        value: 'Microsoft.VisualStudio.Code'
-                                    },
-                                    {
                                         filterType: 10,
                                         value: `publisher:\"${escape(item.substr(0, item.length - 1))}\"`
                                     }
@@ -152,6 +148,14 @@
                         }
 
                     });
+                }
+            });
+            $('#get_badge').on('click', function (e) {
+                getBadge();
+            });
+            $('#item').keypress(function (e) {
+                if (e.which == 13) {
+                    $('#get_badge').trigger('click');
                 }
             });
             $.getJSON("ranking", function (data) {
