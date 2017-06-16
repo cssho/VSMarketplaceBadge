@@ -8,6 +8,13 @@ namespace VSMarketplaceBadge.Models
     {
         private static readonly HttpClient client = new HttpClient();
         public static async Task<string> LoadSvg(string subject, string status, string color, string query)
-            => await client.GetStringAsync($"https://img.shields.io/badge/{subject}-{status}-{color}.svg" + query);
+        {
+            if (status == null)
+            {
+                status = "unknown";
+                color = "lightgrey";
+            }
+            return await client.GetStringAsync($"https://img.shields.io/badge/{subject}-{status}-{color}.svg" + query);
+        }
     }
 }

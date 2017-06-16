@@ -32,6 +32,7 @@ namespace VSMarketplaceBadge.Models
         {
             //var json = await LoadVssItemData(itemName);
             var json = await LoadVssItemDataFromApi(itemName);
+            if (json == null) return null;
             switch (type)
             {
                 case BadgeType.Version:
@@ -65,7 +66,9 @@ namespace VSMarketplaceBadge.Models
                 var response = await result.Content.ReadAsStringAsync();
                 try
                 {
-                    return (JObject)JObject.Parse(response)["results"][0]["extensions"][0];
+                    var extensions = JObject.Parse(response)["results"][0]["extensions"];
+                    if (extensions.Count() != 1) return null;
+                    return (JObject)extensions[0];
                 }
                 catch (InvalidOperationException ex)
                 {
