@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using VSMarketplaceBadge.Models;
+using AsyncFriendlyStackTrace;
 
 namespace VSMarketplaceBadge
 {
@@ -37,7 +38,7 @@ namespace VSMarketplaceBadge
 
         public static async Task SendError(Exception e)
         {
-            var content = new StringContent(JsonConvert.SerializeObject(new { Exception = e.ToString(), Request = HttpContext.Current?.Request.Url.PathAndQuery, Type = e.GetType().FullName }), Encoding.UTF8, "application/json");
+            var content = new StringContent(JsonConvert.SerializeObject(new { Exception = e.ToAsyncString(), Request = HttpContext.Current?.Request.Url.PathAndQuery, Type = e.GetType().FullName }), Encoding.UTF8, "application/json");
             if (apiKey != null) await client.PostAsync($"https://logs-01.loggly.com/inputs/{apiKey}/tag/exception/", content);
         }
     }
