@@ -77,6 +77,7 @@ namespace VSMarketplaceBadge
             {
                 Loggly.SendError(e).FireAndForget();
                 connection.Dispose();
+                connection = null;
                 database = null;
                 return null;
             }
@@ -92,6 +93,7 @@ namespace VSMarketplaceBadge
             {
                 Loggly.SendError(e).FireAndForget();
                 connection.Dispose();
+                connection = null;
                 database = null;
             }
         }
