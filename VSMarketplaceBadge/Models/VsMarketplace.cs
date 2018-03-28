@@ -1,6 +1,4 @@
-﻿using Fizzler.Systems.HtmlAgilityPack;
-using HtmlAgilityPack;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -15,9 +13,7 @@ namespace VSMarketplaceBadge.Models
 {
     public static class VsMarketplace
     {
-        private static readonly Uri marketplaceUri = new Uri("https://marketplace.visualstudio.com/");
         private static readonly Uri marketplaceApiUri = new Uri("https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery");
-        private static readonly Uri marketplaceItemUri = new Uri(marketplaceUri, "items");
         private static readonly string itemQuery = "itemName";
         private static readonly string[] units = { "", "K", "M", "G" };
         private static readonly HttpClient client = new HttpClient();
@@ -127,33 +123,6 @@ namespace VSMarketplaceBadge.Models
         {
             if (installs < 1000 || unitIdx == units.Length) return installs.ToString() + units[unitIdx];
             return ApplyUnit(Math.Round(installs / 1000, 2, MidpointRounding.AwayFromZero), unitIdx + 1);
-        }
-
-        private static async Task<JObject> LoadVssItemData(string itemName)
-        {
-            var html = new HtmlDocument();
-            var builder = CreateItemUri(itemName);
-            html.LoadHtml(await client.GetStringAsync(builder.ToString()));
-
-            return JObject.Parse(html.DocumentNode.QuerySelectorAll(".vss-extension").First().InnerText);
-        }
-
-        private static UriBuilder CreateItemUri(string itemName)
-        {
-            return CreateUri(new Dictionary<string, string>() { { itemQuery, itemName } });
-        }
-
-        private static UriBuilder CreateUri(Dictionary<string, string> param)
-        {
-            var builder = new UriBuilder(marketplaceItemUri);
-            var query = HttpUtility.ParseQueryString(builder.Query);
-            foreach (var kv in param)
-            {
-                query[kv.Key] = kv.Value;
-            }
-
-            builder.Query = query.ToString();
-            return builder;
         }
     }
 }
