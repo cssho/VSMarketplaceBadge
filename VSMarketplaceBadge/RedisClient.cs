@@ -10,9 +10,8 @@ namespace VSMarketplaceBadge
 {
     public class RedisClient
     {
-        private static ConfigurationOptions RedisConf
-        {
-            get
+        private static Lazy<ConfigurationOptions> configOptions
+            = new Lazy<ConfigurationOptions>(() =>
             {
                 var redisUrl = ConfigurationManager.AppSettings.Get("REDISTOGO_URL");
 
@@ -36,49 +35,37 @@ namespace VSMarketplaceBadge
                 }
 
                 return null;
-            }
-        }
+            });
 
-        private static ConnectionMultiplexer connection;
-        private static IDatabase database;
-
-        private static IDatabase Database
-        {
-            get
-            {
-                if (database != null) return database;
-
-                if (connection == null && RedisConf != null)
+        private static Lazy<ConnectionMultiplexer> conn
+            = new Lazy<ConnectionMultiplexer>(
+                () =>
                 {
                     try
                     {
-                        connection = ConnectionMultiplexer.Connect(RedisConf);
+                        return configOptions.Value == null ? null : ConnectionMultiplexer.Connect(configOptions.Value);
                     }
                     catch (Exception e)
                     {
                         Loggly.SendError(e).FireAndForget();
                     }
-                }
 
-                database =  connection?.GetDatabase();
-                return database;
-
-            }
-        }
+                    return null;
+                });
+        private static ConnectionMultiplexer SafeConn => conn.Value;
 
         public static async Task<byte[]> GetImage(string key)
         {
-            if (Database == null) return null;
+            
             try
             {
-                return await Database.StringGetAsync(key);
+                var db = SafeConn?.GetDatabase();
+                if (db == null) return null;
+                return await db.StringGetAsync(key);
             }
             catch (Exception e)
             {
                 Loggly.SendError(e).FireAndForget();
-                connection.Dispose();
-                connection = null;
-                database = null;
                 return null;
             }
         }
@@ -87,14 +74,11 @@ namespace VSMarketplaceBadge
         {
             try
             {
-                Database?.StringSet(key, image, TimeSpan.FromDays(1), flags: CommandFlags.FireAndForget);
+                SafeConn?.GetDatabase().StringSet(key, image, TimeSpan.FromDays(1), flags: CommandFlags.FireAndForget);
             }
             catch (Exception e)
             {
                 Loggly.SendError(e).FireAndForget();
-                connection.Dispose();
-                connection = null;
-                database = null;
             }
         }
     }
