@@ -15,19 +15,20 @@ namespace VSMarketplaceBadge
         static RedisClient()
         {
             var redisUrl = ConfigurationManager.AppSettings.Get("REDISTOGO_URL");
-            if (redisUrl != null)
-            {
-                var uri = new Uri(redisUrl);
-                var userInfo = uri.UserInfo.Split(':');
+            Loggly.SendDebug(new {URL = redisUrl}).FireAndForget();
+            //if (redisUrl != null)
+            //{
+            //    var uri = new Uri(redisUrl);
+            //    var userInfo = uri.UserInfo.Split(':');
 
-                var redis = ConnectionMultiplexer.Connect(new ConfigurationOptions
-                {
-                    EndPoints = { { uri.Host, uri.Port } },
-                    ClientName = userInfo[0],
-                    Password = userInfo[1]
-                });
-                Database = redis.GetDatabase();
-            }
+            //    var redis = ConnectionMultiplexer.Connect(new ConfigurationOptions
+            //    {
+            //        EndPoints = { { uri.Host, uri.Port } },
+            //        ClientName = userInfo[0],
+            //        Password = userInfo[1]
+            //    });
+            //    Database = redis.GetDatabase();
+            //}
         }
 
         public static async Task<byte[]> GetImage(string key)

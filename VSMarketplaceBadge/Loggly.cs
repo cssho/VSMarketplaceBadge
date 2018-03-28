@@ -41,5 +41,10 @@ namespace VSMarketplaceBadge
             var content = new StringContent(JsonConvert.SerializeObject(new { Exception = e.ToAsyncString(), Request = HttpContext.Current?.Request.Url.PathAndQuery, Type = e.GetType().FullName }), Encoding.UTF8, "application/json");
             if (apiKey != null) await client.PostAsync($"https://logs-01.loggly.com/inputs/{apiKey}/tag/exception/", content);
         }
+        public static async Task SendDebug<T>(T message)
+        {
+            var content = new StringContent(JsonConvert.SerializeObject(message), Encoding.UTF8, "application/json");
+            if (apiKey != null) await client.PostAsync($"https://logs-01.loggly.com/inputs/{apiKey}/tag/debug/", content);
+        }
     }
 }
