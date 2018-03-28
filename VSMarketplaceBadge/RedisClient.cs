@@ -40,12 +40,13 @@ namespace VSMarketplaceBadge
         }
 
         private static ConnectionMultiplexer connection;
+        private static IDatabase database;
 
-        private static ConnectionMultiplexer Connection
+        private static IDatabase Database
         {
             get
             {
-
+                if (database != null) return database;
 
                 if (connection == null && RedisConf != null)
                 {
@@ -59,36 +60,39 @@ namespace VSMarketplaceBadge
                     }
                 }
 
-                return connection;
+                database =  connection?.GetDatabase();
+                return database;
 
             }
         }
 
         public static async Task<byte[]> GetImage(string key)
         {
-            var db = Connection?.GetDatabase();
-            if (db == null) return null;
+            if (Database == null) return null;
             try
             {
-                return await db.StringGetAsync(key);
+                return await Database.StringGetAsync(key);
             }
             catch (Exception e)
             {
                 Loggly.SendError(e).FireAndForget();
+                connection.Dispose();
+                database = null;
                 return null;
             }
         }
 
         public static void SetImage(string key, byte[] image)
         {
-            var db = Connection?.GetDatabase();
             try
             {
-                db?.StringSet(key, image, TimeSpan.FromDays(1), flags: CommandFlags.FireAndForget);
+                Database?.StringSet(key, image, TimeSpan.FromDays(1), flags: CommandFlags.FireAndForget);
             }
             catch (Exception e)
             {
                 Loggly.SendError(e).FireAndForget();
+                connection.Dispose();
+                database = null;
             }
         }
     }
