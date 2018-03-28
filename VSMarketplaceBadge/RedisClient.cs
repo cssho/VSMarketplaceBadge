@@ -15,30 +15,54 @@ namespace VSMarketplaceBadge
         static RedisClient()
         {
             var redisUrl = ConfigurationManager.AppSettings.Get("REDISTOGO_URL");
-            Loggly.SendDebug(new {URL = redisUrl}).FireAndForget();
-            //if (redisUrl != null)
-            //{
-            //    var uri = new Uri(redisUrl);
-            //    var userInfo = uri.UserInfo.Split(':');
 
-            //    var redis = ConnectionMultiplexer.Connect(new ConfigurationOptions
-            //    {
-            //        EndPoints = { { uri.Host, uri.Port } },
-            //        ClientName = userInfo[0],
-            //        Password = userInfo[1]
-            //    });
-            //    Database = redis.GetDatabase();
-            //}
+            if (redisUrl != null)
+            {
+                var uri = new Uri(redisUrl);
+                var userInfo = uri.UserInfo.Split(':');
+                var conf = new ConfigurationOptions
+                {
+                    EndPoints = { { uri.Host, uri.Port } },
+                    ClientName = userInfo[0],
+                    Password = userInfo[1]
+                };
+                Loggly.SendDebug(new { Url = redisUrl, Conf = conf }).FireAndForget();
+                try
+                {
+                    var redis = ConnectionMultiplexer.Connect(conf);
+                    Database = redis.GetDatabase();
+                }
+                catch (Exception e)
+                {
+                    Loggly.SendError(e).FireAndForget();
+                }
+            }
         }
 
         public static async Task<byte[]> GetImage(string key)
         {
             if (Database == null) return null;
-            return await Database?.StringGetAsync(key);
+            try
+            {
+                return await Database?.StringGetAsync(key);
+            }
+            catch (Exception e)
+            {
+                Loggly.SendError(e).FireAndForget();
+                return null;
+            }
         }
 
         public static void SetImage(string key, byte[] image)
-            => Database?.StringSet(key, image, TimeSpan.FromDays(1), flags: CommandFlags.FireAndForget);
-
+        {
+            try
+            {
+                Database?.StringSet(key, image, TimeSpan.FromDays(1), flags: CommandFlags.FireAndForget);
+            }
+            catch (Exception e)
+            {
+                Loggly.SendError(e).FireAndForget();
+            }
+        }
     }
 }
