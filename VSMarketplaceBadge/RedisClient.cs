@@ -10,41 +10,67 @@ namespace VSMarketplaceBadge
 {
     public class RedisClient
     {
-        private static readonly IDatabase Database;
-
-        static RedisClient()
+        private static ConfigurationOptions RedisConf
         {
-            var redisUrl = ConfigurationManager.AppSettings.Get("REDISTOGO_URL");
-
-            if (redisUrl != null)
+            get
             {
-                var uri = new Uri(redisUrl);
-                var userInfo = uri.UserInfo.Split(':');
-                var conf = new ConfigurationOptions
+                var redisUrl = ConfigurationManager.AppSettings.Get("REDISTOGO_URL");
+
+                if (redisUrl != null)
                 {
-                    EndPoints = { { uri.Host, uri.Port } },
-                    ClientName = userInfo[0],
-                    Password = userInfo[1]
-                };
-                Loggly.SendDebug(new { Url = redisUrl, Conf = conf }).FireAndForget();
-                try
-                {
-                    var redis = ConnectionMultiplexer.Connect(conf);
-                    Database = redis.GetDatabase();
+                    var uri = new Uri(redisUrl);
+                    var userInfo = uri.UserInfo.Split(':');
+                    var conf = new ConfigurationOptions
+                    {
+                        EndPoints = { { uri.Host, uri.Port } },
+                        ClientName = userInfo[0],
+                        Password = userInfo[1],
+                        AbortOnConnectFail = false
+                    };
+                    Loggly.SendDebug(new
+                    {
+                        Url = redisUrl,
+                        Conf = conf
+                    }).FireAndForget();
+                    return conf;
                 }
-                catch (Exception e)
+
+                return null;
+            }
+        }
+
+        private static ConnectionMultiplexer connection;
+
+        private static ConnectionMultiplexer Connection
+        {
+            get
+            {
+
+
+                if (connection == null && RedisConf != null)
                 {
-                    Loggly.SendError(e).FireAndForget();
+                    try
+                    {
+                        connection = ConnectionMultiplexer.Connect(RedisConf);
+                    }
+                    catch (Exception e)
+                    {
+                        Loggly.SendError(e).FireAndForget();
+                    }
                 }
+
+                return connection;
+
             }
         }
 
         public static async Task<byte[]> GetImage(string key)
         {
-            if (Database == null) return null;
+            var db = Connection?.GetDatabase();
+            if (db == null) return null;
             try
             {
-                return await Database?.StringGetAsync(key);
+                return await db.StringGetAsync(key);
             }
             catch (Exception e)
             {
@@ -55,9 +81,10 @@ namespace VSMarketplaceBadge
 
         public static void SetImage(string key, byte[] image)
         {
+            var db = Connection?.GetDatabase();
             try
             {
-                Database?.StringSet(key, image, TimeSpan.FromDays(1), flags: CommandFlags.FireAndForget);
+                db?.StringSet(key, image, TimeSpan.FromDays(1), flags: CommandFlags.FireAndForget);
             }
             catch (Exception e)
             {
