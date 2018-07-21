@@ -48,9 +48,33 @@ namespace VSMarketplaceBadge.Models
                     return LoadTrending(json, "trendingmonthly");
                 case BadgeType.TrendingWeekly:
                     return LoadTrending(json, "trendingweekly");
+                case BadgeType.RatingStar:
+                    return LoadRatingStar(json);
                 default:
                     throw new ArgumentException();
             }
+        }
+
+        private static readonly double[] FractionBoundaryValues = new[] { 7.0 / 8.0, 5.0 / 8.0, 3.0 / 8.0, 1.0 / 8.0 };
+
+        private static string LoadRatingStar(JObject json)
+        {
+            var average = json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "averagerating")?.Value<double>("value");
+            if (!average.HasValue) return "☆☆☆☆☆";
+            var floored = Math.Floor(average.Value);
+            var fraction = average.Value - floored;
+
+            var stars = "";
+            while (stars.Length < floored) stars += '★';
+
+            stars += fraction >= FractionBoundaryValues[0] ? "★"
+                : fraction >= FractionBoundaryValues[1] ? "¾"
+                : fraction >= FractionBoundaryValues[2] ? "½"
+                : fraction >= FractionBoundaryValues[3] ? "¼"
+                : "";
+
+            while (stars.Length < 5) stars += '☆';
+            return stars;
         }
 
         private static async Task<JObject> LoadVssItemDataFromApi(string itemName)

@@ -7,6 +7,7 @@
         Rating,
         VersionShort,
         RatingShort,
+        RatingStar,
         InstallsShort,
         TrendingDaily,
         TrendingWeekly,

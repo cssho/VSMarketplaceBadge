@@ -64,6 +64,13 @@ namespace VSMarketplaceBadge.Controllers
         }
 
         [HttpGet]
+        [Route("rating-star/{id}.{ext}")]
+        public async Task<HttpResponseMessage> RatingStar(string id, string subject = RatingSubject, string color = DefaultColor, string ext = DefaultBadgeType)
+        {
+            return await CreateResponse(id, BadgeType.RatingStar, subject, color, ext);
+        }
+
+        [HttpGet]
         [Route("ranking")]
         public RankingViewModel Ranking()
         {

@@ -32,6 +32,10 @@ or
 
 SVG URL : `https://vsmarketplacebadge.apphb.com/rating-short/{publisher_name}.{extension_name}.svg`
 
+or
+
+SVG URL : `https://vsmarketplacebadge.apphb.com/rating-star/{publisher_name}.{extension_name}.svg`
+
 # Set the custom subject
 
 Add query string parameter *subject*.

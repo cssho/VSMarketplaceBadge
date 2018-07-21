@@ -76,6 +76,10 @@
                 <div id="brs_url" class="well well-sm badge-url"></div>
             </div>
             <div class="col-lg-12">
+                <span>Rating(Star) : </span><img id="badge_rating_star" />
+                <div id="brst_url" class="well well-sm badge-url"></div>
+            </div>
+            <div class="col-lg-12">
                 <span>TrendingDaily : </span><img id="badge_trending_daily" />
                 <div id="btd_url" class="well well-sm badge-url"></div>
             </div>
@@ -181,6 +185,7 @@
             var vsurl = convertAbsUrl('/version-short/' + item + '.svg');
             var isurl = convertAbsUrl('/installs-short/' + item + '.svg');
             var rsurl = convertAbsUrl('/rating-short/' + item + '.svg');
+            var rsturl = convertAbsUrl('/rating-star/' + item + '.svg');
             var tdurl = convertAbsUrl('/trending-daily/' + item + '.svg');
             var twurl = convertAbsUrl('/trending-weekly/' + item + '.svg');
             var tmurl = convertAbsUrl('/trending-monthly/' + item + '.svg');
@@ -194,6 +199,8 @@
             $('#bvs_url').text(vsurl);
             $('#badge_rating_short').attr("src", rsurl);
             $('#brs_url').text(rsurl);
+            $('#badge_rating_star').attr("src", rsturl);
+            $('#brst_url').text(rsturl);
             $('#badge_installs_short').attr("src", isurl);
             $('#bis_url').text(isurl);
             $('#badge_trending_daily').attr("src", tdurl);
