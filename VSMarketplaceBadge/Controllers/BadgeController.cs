@@ -12,6 +12,7 @@ namespace VSMarketplaceBadge.Controllers
     public class BadgeController : ApiController
     {
         private const string InstallsSubject = "installs";
+        private const string DownloadsSubject = "downloads";
         private const string VersionSubject = "Visual%20Studio%20Marketplace";
         private const string VersionShortSubject = "VS%20Marketplace";
         private const string RatingSubject = "rating";
@@ -51,14 +52,14 @@ namespace VSMarketplaceBadge.Controllers
 
         [HttpGet]
         [Route("downloads/{id}.{ext}")]
-        public async Task<HttpResponseMessage> Downloads(string id, string subject = InstallsSubject, string color = DefaultColor, string ext = DefaultBadgeType)
+        public async Task<HttpResponseMessage> Downloads(string id, string subject = DownloadsSubject, string color = DefaultColor, string ext = DefaultBadgeType)
         {
             return await CreateResponse(id, BadgeType.Downloads, subject, color, ext);
         }
 
         [HttpGet]
         [Route("downloads-short/{id}.{ext}")]
-        public async Task<HttpResponseMessage> DownloadsShort(string id, string subject = InstallsSubject, string color = DefaultColor, string ext = DefaultBadgeType)
+        public async Task<HttpResponseMessage> DownloadsShort(string id, string subject = DownloadsSubject, string color = DefaultColor, string ext = DefaultBadgeType)
         {
             return await CreateResponse(id, BadgeType.DownloadsShort, subject, color, ext);
         }
