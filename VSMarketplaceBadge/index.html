@@ -68,6 +68,14 @@
                 <div id="bis_url" class="well well-sm badge-url"></div>
             </div>
             <div class="col-lg-12">
+                <span>Downloads : </span><img id="badge_downloads" />
+                <div id="bd_url" class="well well-sm badge-url"></div>
+            </div>
+            <div class="col-lg-12">
+                <span>Downloads(Short) : </span><img id="badge_downloads_short" />
+                <div id="bds_url" class="well well-sm badge-url"></div>
+            </div>
+            <div class="col-lg-12">
                 <span>Rating : </span><img id="badge_rating" />
                 <div id="br_url" class="well well-sm badge-url"></div>
             </div>
@@ -189,6 +197,9 @@
             var tdurl = convertAbsUrl('/trending-daily/' + item + '.svg');
             var twurl = convertAbsUrl('/trending-weekly/' + item + '.svg');
             var tmurl = convertAbsUrl('/trending-monthly/' + item + '.svg');
+
+            var durl = convertAbsUrl('/downloads/' + item + '.svg');
+            var dsurl = convertAbsUrl('/downloads-short/' + item + '.svg');
             $('#badge_version').attr("src", vurl);
             $('#bv_url').text(vurl);
             $('#badge_installs').attr("src", iurl);
@@ -209,6 +220,10 @@
             $('#btw_url').text(twurl);
             $('#badge_trending_monthly').attr("src", tmurl);
             $('#btm_url').text(tmurl);
+            $('#badge_downloads').attr("src", durl);
+            $('#bd_url').text(durl);
+            $('#badge_downloads_short').attr("src", dsurl);
+            $('#bds_url').text(dsurl);
         }
         function convertAbsUrl(src) {
             return $("<a>").attr("href", src).get(0).href;

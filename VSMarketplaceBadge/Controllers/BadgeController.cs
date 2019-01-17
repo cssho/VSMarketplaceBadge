@@ -50,6 +50,20 @@ namespace VSMarketplaceBadge.Controllers
         }
 
         [HttpGet]
+        [Route("downloads/{id}.{ext}")]
+        public async Task<HttpResponseMessage> Downloads(string id, string subject = InstallsSubject, string color = DefaultColor, string ext = DefaultBadgeType)
+        {
+            return await CreateResponse(id, BadgeType.Downloads, subject, color, ext);
+        }
+
+        [HttpGet]
+        [Route("downloads-short/{id}.{ext}")]
+        public async Task<HttpResponseMessage> DownloadsShort(string id, string subject = InstallsSubject, string color = DefaultColor, string ext = DefaultBadgeType)
+        {
+            return await CreateResponse(id, BadgeType.DownloadsShort, subject, color, ext);
+        }
+
+        [HttpGet]
         [Route("rating/{id}.{ext}")]
         public async Task<HttpResponseMessage> Rating(string id, string subject = RatingSubject, string color = DefaultColor, string ext = DefaultBadgeType)
         {

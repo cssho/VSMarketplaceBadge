@@ -11,6 +11,8 @@
         InstallsShort,
         TrendingDaily,
         TrendingWeekly,
-        TrendingMonthly
+        TrendingMonthly,
+        Downloads,
+        DownloadsShort
     }
 }

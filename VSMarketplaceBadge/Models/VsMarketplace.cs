@@ -50,6 +50,10 @@ namespace VSMarketplaceBadge.Models
                     return LoadTrending(json, "trendingweekly");
                 case BadgeType.RatingStar:
                     return LoadRatingStar(json);
+                case BadgeType.Downloads:
+                    return LoadDownloads(json);
+                case BadgeType.DownloadsShort:
+                    return LoadDownloads(json, true);
                 default:
                     throw new ArgumentException();
             }
@@ -124,22 +128,16 @@ namespace VSMarketplaceBadge.Models
 
 
         private static string LoadInstalls(JObject json, bool isShort = false)
-        {
-            if (isShort)
-            {
-                var installs = (double)CountInstalls(json);
-                return ApplyUnit(installs);
-            }
-            else
-            {
-                return CountInstalls(json).ToString();
-            }
-        }
+            => isShort ? ApplyUnit(CountInstalls(json)) : CountInstalls(json).ToString();
+        private static string LoadDownloads(JObject json, bool isShort = false)
+            => isShort ? ApplyUnit(CountDownloads(json)) : CountDownloads(json).ToString();
 
         private static long CountInstalls(JObject json)
+            => (long)(json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "install")?["value"] ?? 0);
+
+        private static long CountDownloads(JObject json)
         {
-            var installs = (long)(json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "install")["value"] ?? 0);
-            installs += (long)(json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "migratedInstallCount")?["value"] ?? 0);
+            var installs = (long)(json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "install")?["value"] ?? 0);
             installs += (long)(json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "updateCount")?["value"] ?? 0);
             return installs;
         }
