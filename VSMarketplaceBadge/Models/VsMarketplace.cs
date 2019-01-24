@@ -133,12 +133,14 @@ namespace VSMarketplaceBadge.Models
             => isShort ? ApplyUnit(CountDownloads(json)) : CountDownloads(json).ToString();
 
         private static long CountInstalls(JObject json)
-            => (long)(json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "install")?["value"] ?? 0);
+            => (long)(json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "install")?["value"] ?? 0)
+                + (long)(json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "migratedInstallCount")?["value"] ?? 0);
 
         private static long CountDownloads(JObject json)
         {
             var installs = (long)(json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "install")?["value"] ?? 0);
             installs += (long)(json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "updateCount")?["value"] ?? 0);
+            installs += (long)(json["statistics"]?.FirstOrDefault(x => (string)x["statisticName"] == "migratedInstallCount")?["value"] ?? 0);
             return installs;
         }
 
