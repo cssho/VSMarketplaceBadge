@@ -115,8 +115,8 @@ namespace VSMarketplaceBadge.Controllers
 
         private async Task<HttpResponseMessage> CreateResponse(string itemName, BadgeType type, string subject, string color, string ext)
         {
-            var status = await VsMarketplace.Load(itemName, type);
             Loggly.SendAccess(itemName, type, subject, color, ext).FireAndForget();
+            var status = await VsMarketplace.Load(itemName, type);
             var res = Request.CreateResponse(HttpStatusCode.OK);
             res.Content = new ByteArrayContent(await ShieldsIo.LoadSvg(subject, status, color, Request.RequestUri.Query, ext));
             res.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeMap[ext]);
