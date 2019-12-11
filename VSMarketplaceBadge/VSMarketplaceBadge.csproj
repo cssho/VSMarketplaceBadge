@@ -119,6 +119,7 @@
     <Compile Include="Models\RankingViewModel.cs" />
     <Compile Include="Loggly.cs" />
     <Compile Include="Models\ShieldsIo.cs" />
+    <Compile Include="Models\NewService.cs" />
     <Compile Include="Models\VsMarketplace.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedisClient.cs" />

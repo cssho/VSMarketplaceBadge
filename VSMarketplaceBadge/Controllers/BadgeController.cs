@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using VSMarketplaceBadge.Models;
 
@@ -85,12 +88,12 @@ namespace VSMarketplaceBadge.Controllers
             return await CreateResponse(id, BadgeType.RatingStar, subject, color, ext);
         }
 
-        [HttpGet]
-        [Route("ranking")]
-        public RankingViewModel Ranking()
-        {
-            return Loggly.Ranking;
-        }
+        //[HttpGet]
+        //[Route("ranking")]
+        //public RankingViewModel Ranking()
+        //{
+        //    return Loggly.Ranking;
+        //}
 
         [HttpGet]
         [Route("trending-daily/{id}.{ext}")]
@@ -115,16 +118,17 @@ namespace VSMarketplaceBadge.Controllers
 
         private async Task<HttpResponseMessage> CreateResponse(string itemName, BadgeType type, string subject, string color, string ext)
         {
-            Loggly.SendAccess(itemName, type, subject, color, ext).FireAndForget();
-            var status = await VsMarketplace.Load(itemName, type);
-            var res = Request.CreateResponse(HttpStatusCode.OK);
-            res.Content = new ByteArrayContent(await ShieldsIo.LoadSvg(subject, status, color, Request.RequestUri.Query, ext));
-            res.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeMap[ext]);
-            res.Headers.CacheControl = new CacheControlHeaderValue()
-            {
-                NoCache = true
-            };
-            return res;
+            //Loggly.SendAccess(itemName, type, subject, color, ext).FireAndForget();
+            //var status = await VsMarketplace.Load(itemName, type);
+            //var res = Request.CreateResponse(HttpStatusCode.OK);
+            //res.Content = new ByteArrayContent(await ShieldsIo.LoadSvg(subject, status, color, Request.RequestUri.Query, ext));
+            //res.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeMap[ext]);
+            //res.Headers.CacheControl = new CacheControlHeaderValue()
+            //{
+            //    NoCache = true
+            //};
+            //return res;
+            return await NewService.Relay(Request.RequestUri);
         }
 
         private static readonly Dictionary<string, string> mimeMap = new Dictionary<string, string>()

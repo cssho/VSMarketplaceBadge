@@ -99,21 +99,6 @@
                 <span>TrendingMonthly : </span><img id="badge_trending_monthly" />
                 <div id="btm_url" class="well well-sm badge-url"></div>
             </div>
-            <div class="col-lg-12">
-                <h4>VSMarketplaceBadge Call Ranking</h4>
-                <div class="col-lg-4">
-                    <h5>Weekly</h5>
-                    <ol class="Weekly"></ol>
-                </div>
-                <div class="col-lg-4">
-                    <h5>Daily</h5>
-                    <ol class="Daily"></ol>
-                </div>
-                <div class="col-lg-4">
-                    <h5>Hourly</h5>
-                    <ol class="Hourly"></ol>
-                </div>
-            </div>
             <div class="col-lg-10">
                 <p>Badge created by <a href="http://shields.io/">Shields.io</a></p>
             </div>
@@ -175,14 +160,6 @@
                 if (e.which == 13) {
                     $('#get_badge').trigger('click');
                 }
-            });
-            $.getJSON("ranking", function (data) {
-                $.each(data, function (key, val) {
-                    $.each(val, function (itemKey, itemVal) {
-                        $('.' + key).append('<li><a href="' + itemVal.Url + '">' + itemVal.ItemName + '</a></li>');
-                    });
-                });
-
             });
         });
         function getBadge() {
