@@ -15,7 +15,7 @@ namespace VSMarketplaceBadge.Models
     {
         private static readonly Uri marketplaceApiUri = new Uri("https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery");
         private static readonly string[] units = { "", "K", "M", "G" };
-        private static readonly HttpClient client = new HttpClient();
+        private static readonly HttpClient client;
 
         static VsMarketplace()
         {
