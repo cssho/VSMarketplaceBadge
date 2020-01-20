@@ -20,7 +20,7 @@ namespace VSMarketplaceBadge.Models
 
         static NewService()
         {
-
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             ServicePointManager.ServerCertificateValidationCallback =
                 new RemoteCertificateValidationCallback(
                     OnRemoteCertificateValidationCallback);
