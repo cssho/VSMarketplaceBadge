@@ -15,13 +15,10 @@ namespace VSMarketplaceBadge.Models
     {
         private static readonly Uri marketplaceApiUri = new Uri("https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery");
         private static readonly string[] units = { "", "K", "M", "G" };
-        private static readonly HttpClient client;
+        private static readonly HttpClient client = new HttpClient();
 
         static VsMarketplace()
         {
-            var httpClientHandler = new HttpClientHandler();
-            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
-            client = new HttpClient(httpClientHandler)
             client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("VSMarketplaceBadge", "1.0"));
             client.DefaultRequestHeaders.Add("Accept", "application/json;api-version=3.0-preview.1");
         }
