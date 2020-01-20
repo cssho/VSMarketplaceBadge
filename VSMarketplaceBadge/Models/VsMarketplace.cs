@@ -19,6 +19,9 @@ namespace VSMarketplaceBadge.Models
 
         static VsMarketplace()
         {
+            var httpClientHandler = new HttpClientHandler();
+            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+            client = new HttpClient(httpClientHandler)
             client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("VSMarketplaceBadge", "1.0"));
             client.DefaultRequestHeaders.Add("Accept", "application/json;api-version=3.0-preview.1");
         }
