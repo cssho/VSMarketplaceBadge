@@ -24,7 +24,7 @@ or
 
 SVG URL : `https://vsmarketplacebadge.apphb.com/installs-short/{publisher_name}.{extension_name}.svg`
 
-# Dowloads Badge
+# Downloads Badge
 *The total number of installs, including updates.*
 ![](image/cssho.vscode-svgviewer_dowloads.png)
 
