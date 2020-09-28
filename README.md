@@ -24,15 +24,15 @@ or
 
 SVG URL : `https://vsmarketplacebadge.apphb.com/installs-short/{publisher_name}.{extension_name}.svg`
 
-# Dowloads Badge
+# Downloads Badge
 *The total number of installs, including updates.*
-![](image/cssho.vscode-svgviewer_dowloads.png)
+![](image/cssho.vscode-svgviewer_downloads.png)
 
-SVG URL : `https://vsmarketplacebadge.apphb.com/dowloads/{publisher_name}.{extension_name}.svg`
+SVG URL : `https://vsmarketplacebadge.apphb.com/downloads/{publisher_name}.{extension_name}.svg`
 
 or
 
-SVG URL : `https://vsmarketplacebadge.apphb.com/dowloads-short/{publisher_name}.{extension_name}.svg`
+SVG URL : `https://vsmarketplacebadge.apphb.com/downloads-short/{publisher_name}.{extension_name}.svg`
 
 # Rating Badge
 ![](image/ms-vscode_csharp.png)
