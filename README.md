@@ -1,3 +1,6 @@
+# !!!AppHarbor is no longer in service, so we have migrated to a new repository and are providing services under a new URL.
+https://vsmarketplacebadges.dev/
+
 # VSMarketplaceBadge
 Badge for Visual Studio Code Extension.
 
